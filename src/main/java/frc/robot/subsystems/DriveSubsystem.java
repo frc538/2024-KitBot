@@ -20,6 +20,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax rearRight;
   private final MecanumDrive mDrive;
   private final Pigeon2 mGyro;
+  private double DriveGain = 0.1;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     frontLeft = new CANSparkMax(8, MotorType.kBrushless);
@@ -60,10 +61,15 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Yaw", mGyro.getYaw().getValueAsDouble());
     SmartDashboard.putNumber("Pitch", mGyro.getPitch().getValueAsDouble());
     SmartDashboard.putNumber("Roll", mGyro.getRoll().getValueAsDouble());
+    SmartDashboard.putNumber("Gain", DriveGain);
 
     // This method will be called once per scheduler run
   }
   public void drive(double forward, double left, double ccw) {
-  mDrive.driveCartesian(forward, left, ccw);
+  mDrive.driveCartesian(forward*DriveGain, left*DriveGain, ccw*DriveGain);
+  }
+
+  public void setGain(double sliderValue) {
+    DriveGain = 0.45*sliderValue+.55;
   }
 }

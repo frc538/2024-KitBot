@@ -55,9 +55,11 @@ public class RobotContainer {
     m_driverController.button(Constants.OperatorConstants.kShootButton).whileTrue(Commands.startEnd(()-> m_ShooterSubsystem.shoot(), ()-> m_ShooterSubsystem.stop(), m_ShooterSubsystem));
 
     m_DriveSubsystem.setDefaultCommand(Commands.run(() -> {
-      double left = -m_driverController.getX();
+      double left = m_driverController.getX();
       double forward = -m_driverController.getY();
       double ccw = m_driverController.getZ();
+      double slider = m_driverController.getRawAxis(3);
+      m_DriveSubsystem.setGain(slider);
       m_DriveSubsystem.drive(forward, left, ccw);
     }, m_DriveSubsystem));
 
