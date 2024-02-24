@@ -12,6 +12,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -52,7 +53,11 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
     m_driverController.button(Constants.OperatorConstants.kIntakeButton).whileTrue(Commands.startEnd(()-> m_ShooterSubsystem.intake(), ()-> m_ShooterSubsystem.stop(),m_ShooterSubsystem));
-    m_driverController.button(Constants.OperatorConstants.kShootButton).whileTrue(Commands.startEnd(()-> m_ShooterSubsystem.shoot(), ()-> m_ShooterSubsystem.stop(), m_ShooterSubsystem));
+    m_driverController
+      .button(Constants.OperatorConstants.kShootButton)
+      .onTrue(Commands.run(()-> m_ShooterSubsystem.spinup(), m_ShooterSubsystem).withTimeout(1.5)
+        .andThen(Commands.run(()-> m_ShooterSubsystem.shoot(), m_ShooterSubsystem).withTimeout(1))
+        .andThen (Commands.run(()-> m_ShooterSubsystem.stop(), m_ShooterSubsystem).withTimeout(0.1)));
 
     m_DriveSubsystem.setDefaultCommand(Commands.run(() -> {
       double left = m_driverController.getX();

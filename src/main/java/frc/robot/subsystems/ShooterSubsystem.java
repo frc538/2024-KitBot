@@ -27,17 +27,24 @@ public class ShooterSubsystem extends SubsystemBase {
     bottom.restoreFactoryDefaults();
     bottom.setInverted(true);
     bottom.setIdleMode(IdleMode.kBrake);
-    bottom.follow(top);
+    // bottom.follow(top);
     bottom.burnFlash();
   }
   public void shoot() {
     top.set(1);
+    bottom.set(1);
   }
   public void intake() {
-    top.set(-0.2);
+    top.set(-0.07);
+    bottom.set(-0.07);
   }
   public void stop() {
     top.set(0);
+    bottom.set(0);
+  }
+  public void spinup() {
+    top.set(1);
+    bottom.set(0);
   }
   @Override
   public void periodic() {
